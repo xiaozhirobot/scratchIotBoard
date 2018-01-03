@@ -1,12 +1,3 @@
-// This is an extension for development and testing of the Scratch Javascript Extension API.
-var LeiWeiTimeout=60000;	//乐为物联的通信超时时间
-var LeiWeiGetInterval=15000;	//LeiWei获取参数的间隔时间
-var YeelinkTimeout=60000;	//Yeelink的通信超时时间
-var YeelinkGetInterval=15000;	//Yeelink获取参数的间隔时间
-var YunSetInterval=15000;	//云服务器上参数设置间隔时间
-var EnvicloudTimeout=60000;	//环境云通信超时时间
-var ReadEnvicloudInterval=3000000;//50分钟读取一次 
-
 
 (function(ext) {
 /**********************************************************************************/
@@ -475,6 +466,15 @@ function delayms(ms) {
     }
 	ext.IRRemoteTx=function(data){SendIRDataToBoard(data); };
 /**********************************************************************************/
+// This is an extension for development and testing of the Scratch Javascript Extension API.
+var LeiWeiTimeout=60000;	//乐为物联的通信超时时间
+var LeiWeiGetInterval=15000;	//LeiWei获取参数的间隔时间
+var YeelinkTimeout=60000;	//Yeelink的通信超时时间
+var YeelinkGetInterval=15000;	//Yeelink获取参数的间隔时间
+var YunSetInterval=15000;	//云服务器上参数设置间隔时间
+var EnvicloudTimeout=60000;	//环境云通信超时时间
+var ReadEnvicloudInterval=3000000;//50分钟读取一次 	
+	
 var EnvicloudCitycodeCached = {};
 function fetchEnvicloudCitycode(city,callback){
 	if (city in EnvicloudCitycodeCached){
@@ -636,10 +636,22 @@ var TinkTimeout=60000;		//Tlink的通信超时时间
 var TlinkGetInterval=15000;	//Tlink获取参数的间隔时间
 var TlinkCached = {};
 
+var IotSetTime = {};
+function CheckIotTimeInterval(type,ms){
+	if (type in IotSetTime &&Date.now() - IotSetTime[type].time < ms) {
+		console.log('时间未到:'+(Date.now() - IotSetTime[type].time)/1000);
+		return false;
+    }
+	else{
+		IotSetTime[type] = {time: Date.now()};
+		return true;
+	}
+}
+	
 ext.SetTlink= function(device,sensor,value){
 	//15s内不得连续发送请求
 	if(CheckIotTimeInterval('Tlink',YunSetInterval)==false)
-		return
+		return;
 	
 	var	linkurl='http://localhost:9000/tlink/'+'createDataPonit.htm';
 	var	postdata='{"deviceNo":"'+device+'","sensorDatas":[{"sensorsId":'+sensor+',"value":"'+value+'"}]}';
