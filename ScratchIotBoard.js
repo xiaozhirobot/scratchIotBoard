@@ -12,40 +12,7 @@
         }
     }
     var watchdog = null;
-	//调试用，找到一个能打开的串口就可以
-/*
-    function tryNextDevice() {
-        // If potentialDevices is empty, device will be undefined.
-        // That will get us back here next time a device is connected.
-        device = potentialDevices.shift();
-        if (!device) return;
-	
-		console.log('potentialDevices:' +potentialDevices);
-		var str = JSON.stringify(potentialDevices);
-		console.log('potentialDevices:' +str);
-		var strdevice = JSON.stringify(device);
-		console.log('device:' +strdevice);
-		
-        device.open({ stopBits: 0, bitRate: 57600, parityBit:0, ctsFlowControl: 0 });
-		var Buf= new Uint8Array(10);
-		for(var i=0;i<10;i++){
-			Buf[i]=0xaa+i;
-			console.log(Buf[i]);
-			device.send(new Uint8Array([Buf[i]]).buffer);
-		}
-		
-        device.set_receive_handler(function(data) {
-		    var rawData = new Uint8Array(data);	
-		    console.log('Received size' + data.byteLength);	
-	        //放置接收的数据到环形缓冲区
-	        for(var i=0;i<data.byteLength;i++){
-				console.log(rawData[i]);
-				BoardToScrath(rawData[i]);  
-	        }
-    	});
-    };	
-	*/
-	
+
     function tryNextDevice() {
         // If potentialDevices is empty, device will be undefined.
         // That will get us back here next time a device is connected.
@@ -477,11 +444,12 @@ var ReadEnvicloudInterval=3000000;//50分钟读取一次
 	
 var EnvicloudCitycodeCached = {};
 function fetchEnvicloudCitycode(city,callback){
+	/*
 	if (city in EnvicloudCitycodeCached){
 		console.log('缓存的城市代码:'+EnvicloudCitycodeCached[city]);
 		callback(EnvicloudCitycodeCached[city]);
 		return;
-	}
+	}*/
 	
 	var	Envicloudurl='http://service.envicloud.cn:8082/v2/citycode/YWJIB3R0X2NOZW4XNTAZNJMWODYZNTQ3'+'/'+city
 	$.ajax({ 
@@ -490,7 +458,7 @@ function fetchEnvicloudCitycode(city,callback){
      	type: 'GET',
      	dataType: 'json',
       	success: function(data) { 
-      		console.log('获取城市代码:'+data.citycode);
+      		console.log('获取城市代码:'+data);
       		EnvicloudCitycodeCached[city]=data.citycode;
       		callback(data.citycode)
       	},
