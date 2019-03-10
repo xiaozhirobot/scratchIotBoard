@@ -524,7 +524,9 @@ function getEnvicloudWeatherDataFromJSOP(type,weatherData){
 }	
 
 ext.GetEnvicloudWeather=function(city,type,callback){
+	console.log('ext.GetEnvicloudWeather_1');
 	fetchEnvicloudWeather(city,function(data) {
+		console.log('ext.GetEnvicloudWeather_2'+data);
 		var ret=getEnvicloudWeatherDataFromJSOP(type,data);
 		console.log('返回值：'+ret); 
 		callback(ret);
